@@ -1,0 +1,61 @@
+.delivery-page {
+  max-width: 500px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #1f1f1f;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  color: #f1f1f1;
+}
+
+.delivery-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.delivery-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.delivery-form input,
+.delivery-form textarea,
+.delivery-form select {
+  margin-top: 6px;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #2a2a2a;
+  color: #fff;
+}
+
+.delivery-form textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.submit-btn {
+  background: #6366f1;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.2s ease;
+}
+
+.submit-btn:hover {
+  background: #4f46e5;
+}
+
+.delivery-success {
+  text-align: center;
+  padding: 40px;
+  background: #1f1f1f;
+  border-radius: 12px;
+  color: #22c55e;
+}
