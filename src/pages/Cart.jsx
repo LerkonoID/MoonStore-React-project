@@ -1,7 +1,10 @@
 import React, { useContext } from 'react';
-import { CartContext } from '../context/CartContext';
 import { Link } from 'react-router-dom';
+import { CartContext } from '../context/CartContext';
+import CartItem from '../components/CartItem';
+import CartSummary from '../components/CartSummary';
 import { formatCurrency } from '../utils/format';
+import '../styles/Cart.css';
 
 const Cart = () => {
   const {
@@ -13,36 +16,44 @@ const Cart = () => {
     totalPrice
   } = useContext(CartContext);
 
-  if (cartItems.length === 0) {
-    return <h2>Корзина пуста</h2>;
+  const subtotal = Number(totalPrice || 0);
+
+  const handleChangeQty = (id, next) => {
+    const current = cartItems.find(i => i.id === id)?.quantity || 1;
+    updateQuantity(id, next - current);
+  };
+
+  if (!cartItems.length) {
+    return (
+      <div className="cart-empty">
+        <h2>Корзина пуста</h2>
+        <p>Перейдите в каталог, чтобы добавить товары.</p>
+        <Link to="/" className="cart-summary__checkout" style={{ display:'inline-block', marginTop: 12 }}>В каталог</Link>
+      </div>
+    );
   }
 
-  const total = Number(totalPrice);
-
   return (
-    <div>
-      <h2>Ваша корзина</h2>
-      <p>Товаров: {totalItems}</p>
-      <p>Общая сумма: {formatCurrency(total)}</p>
-
-      <ul>
+    <div className="cart">
+      <section aria-label="Cart items" className="cart-list" role="list">
         {cartItems.map(item => (
-          <li key={item.id}>
-            {item.title} — {formatCurrency(item.price)} × {item.quantity}
-            <div>
-              <button onClick={() => updateQuantity(item.id, -1)}>-</button>
-              <button onClick={() => updateQuantity(item.id, 1)}>+</button>
-              <button onClick={() => removeFromCart(item.id)}>Удалить</button>
-            </div>
-          </li>
+          <CartItem
+            key={item.id}
+            item={item}
+            onChangeQty={handleChangeQty}
+            onRemove={removeFromCart}
+          />
         ))}
-      </ul>
+        <div style={{ textAlign: 'right', marginTop: 8, opacity: .8 }}>
+          Промежуточный итог: <b>{formatCurrency(subtotal)}</b>
+        </div>
+      </section>
 
-      <button onClick={clearCart}>Очистить корзину</button>
-
-      <Link to="/delivery">
-        <button>Оформить заказ</button>
-      </Link>
+      <CartSummary
+        subtotal={subtotal}
+        totalItems={totalItems}
+        onClear={clearCart}
+      />
     </div>
   );
 };
