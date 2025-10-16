@@ -15,10 +15,10 @@ export default function CartSummary({ subtotal, totalItems, onClear }) {
 
   return (
     <aside className="cart-summary">
-      <h2 className="cart-summary__title">Итоги заказа</h2>
+      <h2 className="cart-summary__title">Підсумки замовлення</h2>
 
       <div className="cart-summary__row">
-        <span>Товары ({totalItems})</span>
+        <span>Товари ({totalItems})</span>
         <span>{formatCurrency(subtotal)}</span>
       </div>
 
@@ -35,24 +35,24 @@ export default function CartSummary({ subtotal, totalItems, onClear }) {
         <p className="cart-summary__hint">
           {eligibleForFree
             ? 'Поздравляем! Доставка бесплатно.'
-            : <>Добавьте ещё {formatCurrency(left)} для бесплатной доставки</>}
+            : <>Додайте ще {formatCurrency(left)} для безкоштовної доставки</>}
         </p>
       </div>
 
       <div className="cart-summary__total">
-        <span>Итого</span>
+        <span>Разом</span>
         <span>{formatCurrency(total)}</span>
       </div>
 
       <Link to="/delivery" className="cart-summary__checkout">
-        Перейти к оформлению
+        Перейти до оформлення
       </Link>
 
       <button type="button" className="cart-summary__clear" onClick={onClear}>
-        Очистить корзину
+        Очистити кошик
       </button>
 
-      <Link className="cart-summary__continue" to="/">Продолжить покупки</Link>
+      <Link className="cart-summary__continue" to="/">Продовжити робити покупки</Link>
     </aside>
   );
 }

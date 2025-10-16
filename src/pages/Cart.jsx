@@ -27,7 +27,7 @@ const Cart = () => {
     return (
       <div className="cart-empty">
         <h2>Корзина пуста</h2>
-        <p>Перейдите в каталог, чтобы добавить товары.</p>
+        <p>Перейдіть до каталогу, щоб додати товари.</p>
         <Link to="/" className="cart-summary__checkout" style={{ display:'inline-block', marginTop: 12 }}>В каталог</Link>
       </div>
     );
@@ -45,7 +45,7 @@ const Cart = () => {
           />
         ))}
         <div style={{ textAlign: 'right', marginTop: 8, opacity: .8 }}>
-          Промежуточный итог: <b>{formatCurrency(subtotal)}</b>
+          Проміжний результат: <b>{formatCurrency(subtotal)}</b>
         </div>
       </section>
 
