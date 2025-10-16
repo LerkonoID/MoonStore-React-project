@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import Loader from '../components/Loader';
 import { useAddToCart } from '../hooks/useAddToCart';
+import { formatCurrency } from '../utils/format';
 import '../styles/ProductDetail.css';
 
 const ProductDetail = () => {
@@ -25,7 +26,7 @@ const ProductDetail = () => {
         ).then(r => {
           if (cancelled) return;
           const filtered = r.data.filter(p => p.id !== res.data.id);
-          setRelated(filtered.slice(0, 8)); 
+          setRelated(filtered.slice(0, 8));
         });
       })
       .finally(() => !cancelled && setLoading(false));
@@ -47,7 +48,7 @@ const ProductDetail = () => {
 
         <div className="pd-info">
           <h1 className="pd-title">{product.title}</h1>
-          <div className="pd-price">${product.price}</div>
+          <div className="pd-price">{formatCurrency(product.price)}</div>
           <p className="pd-desc">{product.description}</p>
           <div className="pd-meta">Категорія: {product.category}</div>
 
@@ -76,7 +77,7 @@ const ProductDetail = () => {
                 </Link>
 
                 <div className="related-card__row">
-                  <span className="related-card__price">${item.price}</span>
+                  <span className="related-card__price">{formatCurrency(item.price)}</span>
                   <button
                     className="btn btn-sm"
                     onClick={(e) => { e.preventDefault(); addToCart(item); }}

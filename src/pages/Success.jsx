@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const Success = () => {
+  useEffect(() => {
+    localStorage.removeItem('deliveryForm');
+  }, []);
+
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
       <h2>Дякуємо за замовлення!</h2>

@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { CartContext } from '../context/CartContext';
 import { Link } from 'react-router-dom';
+import { formatCurrency } from '../utils/format';
 
 const Cart = () => {
   const {
@@ -16,20 +17,18 @@ const Cart = () => {
     return <h2>Корзина пуста</h2>;
   }
 
-  const handleCheckout = () => {
-    navigate("/delivery"); 
-  };
+  const total = Number(totalPrice);
 
   return (
     <div>
       <h2>Ваша корзина</h2>
       <p>Товаров: {totalItems}</p>
-      <p>Общая сумма: ${totalPrice}</p>
+      <p>Общая сумма: {formatCurrency(total)}</p>
 
       <ul>
         {cartItems.map(item => (
           <li key={item.id}>
-            {item.title} — ${item.price} × {item.quantity}
+            {item.title} — {formatCurrency(item.price)} × {item.quantity}
             <div>
               <button onClick={() => updateQuantity(item.id, -1)}>-</button>
               <button onClick={() => updateQuantity(item.id, 1)}>+</button>
@@ -49,4 +48,3 @@ const Cart = () => {
 };
 
 export default Cart;
-

@@ -1,45 +1,36 @@
 .header {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  background: #222;
-  color: #fff;
-  padding: 15px 30px;
+  gap: 16px;
+  padding: 14px 20px;
+  backdrop-filter: blur(6px);
+  background: rgba(20, 22, 28, 0.6);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
-
 .header__logo a {
-  font-size: 20px;
-  font-weight: bold;
-  color: #fff;
-  text-decoration: none;
+  color: #fff; font-weight: 800; letter-spacing: .5px; text-decoration: none; font-size: 20px;
 }
 
-.header__nav a {
-  margin: 0 15px;
-  color: #ccc;
-  text-decoration: none;
+.header__nav { 
+  display: flex; 
+  gap: 16px; 
+  justify-content: center; 
 }
 
-.header__nav a:hover {
-  color: #fff;
+.header__nav a { 
+  color: #bcd; 
+  text-decoration: none; 
 }
 
-.header__right {
-  display: flex;
-  align-items: center;
-  gap: 15px;
+.header__nav a:hover { 
+  color: #fff; 
 }
 
-.header__search {
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: none;
+.header__right { display: flex; 
+  justify-content: flex-end; 
 }
 
-.header__cart {
-  background: #6366f1;
-  padding: 6px 12px;
-  border-radius: 6px;
-  color: #fff;
-  text-decoration: none;
+.header__cart { color: #fff; 
+  text-decoration: none; 
 }

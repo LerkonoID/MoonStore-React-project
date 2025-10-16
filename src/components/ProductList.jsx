@@ -1,118 +1,210 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import axios from 'axios';
-import Loader from './Loader.jsx';
-import ProductCard from './ProductCard';
 import { Link } from 'react-router-dom';
-import '../styles/ProductList.css';
+import Loader from './Loader';
+import { useAddToCart } from '../hooks/useAddToCart';
+import { formatCurrency } from '../utils/format';
 
-function ProductList() {
-  const [products, setProducts] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
-  const [sortOrder, setSortOrder] = useState('');
+const PER_PAGE_DEFAULT = 8;
 
-  useEffect(() => {
-    axios.get('https://fakestoreapi.com/products')
-      .then(res => {
-        setProducts(res.data);
-        setLoading(false);
+const ProductList = () => {
+  const [items, setItems] = React.useState([]);
+  const [categories, setCategories] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState('');
+
+  const [query, setQuery] = React.useState('');
+  const [category, setCategory] = React.useState('all');
+  const [page, setPage] = React.useState(1);
+  const [perPage, setPerPage] = React.useState(PER_PAGE_DEFAULT);
+
+  const addToCart = useAddToCart();
+
+  React.useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError('');
+
+    Promise.all([
+      axios.get('https://fakestoreapi.com/products'),
+      axios.get('https://fakestoreapi.com/products/categories'),
+    ])
+      .then(([prodRes, catRes]) => {
+        if (cancelled) return;
+        setItems(prodRes.data);
+        setCategories(['all', ...catRes.data]);
       })
-      .catch(err => {
-        console.error('Error fetching products:', err);
-        setLoading(false);
-      });
+      .catch(() => !cancelled && setError('Не удалось загрузить товары'))
+      .finally(() => !cancelled && setLoading(false));
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  const filteredProducts = products.filter(product =>
-    product.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    (categoryFilter ? product.category === categoryFilter : true) &&
-    (minPrice ? product.price >= parseFloat(minPrice) : true) &&
-    (maxPrice ? product.price <= parseFloat(maxPrice) : true)
-  );
+  const filtered = React.useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return items.filter((p) => {
+      const byCategory = category === 'all' || p.category === category;
+      const byQuery = !q || p.title.toLowerCase().includes(q);
+      return byCategory && byQuery;
+    });
+  }, [items, query, category]);
 
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
-    if (sortOrder === 'asc') return a.price - b.price;
-    if (sortOrder === 'desc') return b.price - a.price;
-    return 0;
-  });
+  const total = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(total / perPage));
+  const safePage = Math.min(page, totalPages);
+  const start = (safePage - 1) * perPage;
+  const pageItems = filtered.slice(start, start + perPage);
 
-  const categories = [...new Set(products.map(p => p.category))];
+  React.useEffect(() => {
+    setPage(1);
+  }, [query, category, perPage]);
 
-  if (loading) {
-    return <Loader />;
-  }
+  if (loading) return <Loader />;
+  if (error) return <p>{error}</p>;
 
   return (
-    <div>
-      <div className="hero-section">
-        <h1>Ласкаво просимо до <span>MoonStore</span> 🛍</h1>
-        <p>Знайдіть найкращі товари за найкращими цінами</p>
-        <div className="search-bar">
-          <input
-            type="text"
-            placeholder="Пошук товарів..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button>🔍</button>
-        </div>
+    <div className="container" style={{ padding: 16 }}>
+      <div
+        style={{
+          display: 'grid',
+          gap: 12,
+          gridTemplateColumns: '1fr 220px 140px',
+          alignItems: 'center',
+          marginBottom: 16,
+        }}
+      >
+        <input
+          type="search"
+          placeholder="Пошук товарів…"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          style={{
+            padding: '10px 12px',
+            borderRadius: 8,
+            border: '1px solid rgba(255,255,255,.12)',
+            background: '#121418',
+            color: '#fff',
+          }}
+        />
+
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          style={{
+            padding: '10px 12px',
+            borderRadius: 8,
+            border: '1px solid rgba(255,255,255,.12)',
+            background: '#121418',
+            color: '#fff',
+          }}
+        >
+          {categories.map((c) => (
+            <option key={c} value={c}>
+              {c === 'all' ? 'Усі категорії' : c}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={perPage}
+          onChange={(e) => setPerPage(Number(e.target.value))}
+          style={{
+            padding: '10px 12px',
+            borderRadius: 8,
+            border: '1px solid rgba(255,255,255,.12)',
+            background: '#121418',
+            color: '#fff',
+          }}
+        >
+          {[8, 12, 16, 24].map((n) => (
+            <option key={n} value={n}>
+              {n} на сторінку
+            </option>
+          ))}
+        </select>
       </div>
 
-      <div className="content-wrapper">
-        <aside className="filters">
-          <h3>Фільтри</h3>
-          <label>
-            Мін. ціна:
-            <input
-              type="number"
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
-            />
-          </label>
-          <label>
-            Макс. ціна:
-            <input
-              type="number"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-            />
-          </label>
-          <label>
-            Сортування:
-            <select onChange={(e) => setSortOrder(e.target.value)} value={sortOrder}>
-              <option value="">Без сортування</option>
-              <option value="asc">Ціна ↑</option>
-              <option value="desc">Ціна ↓</option>
-            </select>
-          </label>
-          <label>
-            Категорії:
-            <select onChange={(e) => setCategoryFilter(e.target.value)} value={categoryFilter}>
-              <option value="">Усі</option>
-              {categories.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
-          </label>
-        </aside>
-
-        <div className="product-grid">
-          {sortedProducts.map(product => (
+      <div className="product-grid">
+        {pageItems.map((p) => (
+          <article key={p.id} className="product-card">
             <Link
-              to={`/product/${product.id}`}
-              key={product.id}
+              to={`/product/${p.id}`}
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
-              <ProductCard product={product} />
+              <div
+                style={{
+                  height: 180,
+                  display: 'grid',
+                  placeItems: 'center',
+                  background: '#1c1f25',
+                  borderRadius: 8,
+                }}
+              >
+                <img
+                  src={p.image}
+                  alt={p.title}
+                  style={{
+                    maxHeight: 160,
+                    maxWidth: '90%',
+                    objectFit: 'contain',
+                  }}
+                />
+              </div>
+              <h3 style={{ fontSize: 16, margin: '10px 0 6px' }}>{p.title}</h3>
             </Link>
-          ))}
-        </div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <span style={{ fontWeight: 700 }}>{formatCurrency(p.price)}</span>
+              <button
+                className="btn btn-sm"
+                onClick={(e) => {
+                  e.preventDefault();
+                  addToCart(p);
+                }}
+              >
+                Додати
+              </button>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div
+        style={{
+          display: 'flex',
+          gap: 8,
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginTop: 16,
+        }}
+      >
+        <button
+          className="btn btn-sm"
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+          disabled={safePage === 1}
+        >
+          ‹‹ Назад
+        </button>
+        <span style={{ opacity: 0.8 }}>
+          Сторінка {safePage} з {totalPages} (всього {total})
+        </span>
+        <button
+          className="btn btn-sm"
+          onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+          disabled={safePage === totalPages}
+        >
+          Вперед ››
+        </button>
       </div>
     </div>
   );
-}
+};
 
 export default ProductList;

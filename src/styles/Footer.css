@@ -1,78 +1,54 @@
-.footer {
-  background: #1f1f1f;
-  color: #eee;
-  padding: 40px 20px 20px;
+.footer { margin-top: 40px; 
+  background: rgba(20,22,28,.6); 
+  border-top: 1px solid rgba(255,255,255,.08); 
 }
 
-.footer__top {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 30px;
+.footer__top { display: grid; gap: 24px;
+   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+   padding: 24px;
 }
 
-.footer__logo h2 {
-  margin-bottom: 10px;
-  color: #6366f1;
+.footer__logo h2 { margin: 0 0 6px; 
 }
 
-.footer__nav ul {
-  list-style: none;
-  padding: 0;
+.footer__nav ul { list-style: none; 
+  padding: 0; 
+  margin: 0; 
+  display: grid; 
+  gap: 8px; 
 }
 
-.footer__nav a {
-  color: #bbb;
-  text-decoration: none;
-  transition: color 0.2s;
+.footer__nav a { color: #bcd; 
+  text-decoration: none; 
 }
 
-.footer__nav a:hover {
+.footer__nav a:hover { color: #fff; 
+}
+
+.footer__subscribe form { display: flex; 
+  gap: 8px; 
+}
+
+.footer__subscribe input { flex: 1; 
+  padding: 8px 10px; 
+  border-radius: 6px; 
+  border: 1px solid rgba(255,255,255,.12); 
+  background: #121418; 
+  color: #fff; 
+}
+
+.footer__subscribe button { padding: 8px 12px; 
+  border-radius: 6px; 
+  background: #6366f1; 
   color: #fff;
+   border: 0; 
+  }
+
+.footer__social a { color: #bcd;
+   margin-right: 10px; 
 }
 
-.footer__subscribe form {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.footer__subscribe input {
-  flex: 1;
-  padding: 8px;
-  border: none;
-  border-radius: 4px;
-}
-
-.footer__subscribe button {
-  padding: 8px 12px;
-  background: #6366f1;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background 0.2s;
-}
-
-.footer__subscribe button:hover {
-  background: #4f46e5;
-}
-
-.footer__social a {
-  margin-right: 10px;
-  color: #bbb;
-  font-size: 1.4rem;
-  transition: color 0.2s;
-}
-
-.footer__social a:hover {
-  color: #fff;
-}
-
-.footer__bottom {
-  text-align: center;
-  margin-top: 20px;
-  border-top: 1px solid #333;
-  padding-top: 10px;
-  font-size: 0.9rem;
-  color: #aaa;
+.footer__bottom { padding: 14px 24px; 
+  border-top: 1px solid rgba(255,255,255,.08); 
+  color: #9ab; 
 }
