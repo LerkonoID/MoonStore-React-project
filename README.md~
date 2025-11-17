@@ -1,0 +1,41 @@
+# MoonStore — Vite project
+
+This application is built with Vite (React + Vite).
+
+Quick start
+1. Clone the repository and enter the folder:
+```bash
+git clone https://github.com/LerkonoID/MoonStore-React-project.git
+cd MoonStore-React-project
+```
+
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
+
+3. Run in development mode (Vite):
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+```
+The Vite dev server defaults to http://localhost:5173
+
+Build and preview (production)
+```bash
+npm run build
+# then (to preview the built app locally)
+npm run preview
+```
+Vite preview defaults to http://localhost:4173
+
+Notes
+- Node.js is required (LTS recommended, e.g. >=16).
+- Environment variables for this project should start with the VITE_ prefix (for example: VITE_API_URL).
