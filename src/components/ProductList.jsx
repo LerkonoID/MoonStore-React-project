@@ -6,6 +6,7 @@ import { useAddToCart } from '../hooks/useAddToCart';
 import { formatCurrency } from '../utils/format';
 
 const PER_PAGE_DEFAULT = 8;
+const API_URL = 'http://localhost:5000';
 
 const ProductList = () => {
   const [items, setItems] = React.useState([]);
@@ -26,15 +27,16 @@ const ProductList = () => {
     setError('');
 
     Promise.all([
-      axios.get('https://fakestoreapi.com/products'),
-      axios.get('https://fakestoreapi.com/products/categories'),
+      axios.get(`${API_URL}/api/products`),
+      axios.get(`${API_URL}/api/categories`),
     ])
       .then(([prodRes, catRes]) => {
         if (cancelled) return;
+
         setItems(prodRes.data);
-        setCategories(['all', ...catRes.data]);
+        setCategories([{ id: 'all', name: 'Усі категорії' }, ...catRes.data]);
       })
-      .catch(() => !cancelled && setError('Не удалось загрузить товары'))
+      .catch(() => !cancelled && setError('Не вдалося загрузити товари'))
       .finally(() => !cancelled && setLoading(false));
 
     return () => {
@@ -44,9 +46,16 @@ const ProductList = () => {
 
   const filtered = React.useMemo(() => {
     const q = query.trim().toLowerCase();
+
     return items.filter((p) => {
-      const byCategory = category === 'all' || p.category === category;
-      const byQuery = !q || p.title.toLowerCase().includes(q);
+      const byCategory =
+        category === 'all' || String(p.category_id) === String(category);
+
+      const byQuery =
+        !q ||
+        p.name?.toLowerCase().includes(q) ||
+        p.description?.toLowerCase().includes(q);
+
       return byCategory && byQuery;
     });
   }, [items, query, category]);
@@ -101,8 +110,8 @@ const ProductList = () => {
           }}
         >
           {categories.map((c) => (
-            <option key={c} value={c}>
-              {c === 'all' ? 'Усі категорії' : c}
+            <option key={c.id} value={c.id}>
+              {c.name}
             </option>
           ))}
         </select>
@@ -143,8 +152,8 @@ const ProductList = () => {
                 }}
               >
                 <img
-                  src={p.image}
-                  alt={p.title}
+                  src={p.image_url}
+                  alt={p.name}
                   style={{
                     maxHeight: 160,
                     maxWidth: '90%',
@@ -152,8 +161,9 @@ const ProductList = () => {
                   }}
                 />
               </div>
-              <h3 style={{ fontSize: 16, margin: '10px 0 6px' }}>{p.title}</h3>
+              <h3 style={{ fontSize: 16, margin: '10px 0 6px' }}>{p.name}</h3>
             </Link>
+
             <div
               style={{
                 display: 'flex',
@@ -166,7 +176,13 @@ const ProductList = () => {
                 className="btn btn-sm"
                 onClick={(e) => {
                   e.preventDefault();
-                  addToCart(p);
+                  addToCart({
+                    id: p.id,
+                    title: p.name,
+                    price: p.price,
+                    image: p.image_url,
+                    category: p.category_name,
+                  });
                 }}
               >
                 Додати
