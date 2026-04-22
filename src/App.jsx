@@ -7,6 +7,8 @@ import About from './pages/About';
 import Contacts from './pages/Contacts.jsx';
 import Delivery from './pages/Delivery.jsx';
 import Success from './pages/Success.jsx';
+import Orders from './pages/Orders.jsx';  // 🆕 НОВЫЙ
+import OrderDetail from './pages/OrderDetail.jsx';  // 🆕 НОВЫЙ
 import ProductDetail from './pages/ProductDetail.jsx';
 import Loader from './components/Loader.jsx';
 import Cart from './pages/Cart';
@@ -56,6 +58,8 @@ function App() {
                 <Route path="/contacts" element={<Contacts />} />
                 <Route path="/delivery" element={<Delivery />} />
                 <Route path="/success" element={<Success />} />
+                <Route path="/orders" element={<Orders />} />  {/* 🆕 НОВЫЙ */}
+                <Route path="/order/:id" element={<OrderDetail />} />  {/* 🆕 НОВЫЙ */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
