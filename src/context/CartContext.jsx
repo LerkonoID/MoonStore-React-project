@@ -13,16 +13,25 @@ export const CartProvider = ({ children }) => {
   }, [cartItems]);
 
   const addToCart = (product) => {
+    const normalizedProduct = {
+      id: product.id,
+      title: product.name || product.title,
+      price: Number(product.price),
+      image: product.image_url || product.image,
+      category: product.category_name || product.category,
+      quantity: 1,
+    };
+
     setCartItems((prev) => {
-      const existing = prev.find((item) => item.id === product.id);
+      const existing = prev.find((item) => item.id === normalizedProduct.id);
       if (existing) {
         return prev.map((item) =>
-          item.id === product.id
+          item.id === normalizedProduct.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
-      return [...prev, { ...product, quantity: 1 }];
+      return [...prev, normalizedProduct];
     });
   };
 
@@ -34,17 +43,17 @@ export const CartProvider = ({ children }) => {
     setCartItems([]);
   };
 
-const updateQuantity = (id, amount) => {
-  setCartItems((prev) =>
-    prev
-      .map((item) =>
-        item.id === id
-          ? { ...item, quantity: item.quantity + amount }
-          : item
-      )
-      .filter((item) => item.quantity > 0) 
-  );
-};
+  const updateQuantity = (id, amount) => {
+    setCartItems((prev) =>
+      prev
+        .map((item) =>
+          item.id === id
+            ? { ...item, quantity: item.quantity + amount }
+            : item
+        )
+        .filter((item) => item.quantity > 0)
+    );
+  };
 
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   const totalPrice = cartItems

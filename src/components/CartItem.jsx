@@ -3,16 +3,18 @@ import QuantityStepper from './QuantityStepper';
 import { formatCurrency } from '../utils/format';
 
 export default function CartItem({ item, onChangeQty, onRemove }) {
+  const title = item.name || item.title;
+  const image = item.image_url || item.image;
   const lineTotal = Number(item.price) * Number(item.quantity || 1);
 
   return (
     <article className="cart-item" role="listitem">
       <div className="cart-item__media">
-        <img src={item.image} alt={item.title} loading="lazy" />
+        <img src={image} alt={title} loading="lazy" />
       </div>
 
       <div className="cart-item__body">
-        <h3 className="cart-item__title">{item.title}</h3>
+        <h3 className="cart-item__title">{title}</h3>
         <div className="cart-item__meta">
           <span className="cart-item__price">{formatCurrency(item.price)}</span>
         </div>
@@ -20,10 +22,14 @@ export default function CartItem({ item, onChangeQty, onRemove }) {
           <QuantityStepper
             value={item.quantity}
             onChange={(q) => onChangeQty(item.id, q)}
-            aria-label={`Quantity for ${item.title}`}
+            aria-label={`Quantity for ${title}`}
           />
-          <button className="cart-item__remove" onClick={() => onRemove(item.id)} aria-label={`Remove ${item.title}`}>
-            Удалить
+          <button
+            className="cart-item__remove"
+            onClick={() => onRemove(item.id)}
+            aria-label={`Remove ${title}`}
+          >
+            Видалити
           </button>
         </div>
       </div>
