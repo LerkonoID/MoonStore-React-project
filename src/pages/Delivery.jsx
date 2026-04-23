@@ -2,13 +2,11 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CartContext } from "../context/CartContext";
+import { UserContext } from "../context/UserContext";
 import "../styles/Delivery.css";
 
 const STORAGE_KEY = 'deliveryForm';
 const API_URL = 'http://localhost:5000';
-
-// Временно захардкодим user_id (позже будет из UserContext)
-const CURRENT_USER_ID = 9;
 
 function formatUaPhone(input) {
   const digits = (input || '').replace(/\D/g, '');
@@ -27,6 +25,7 @@ function formatUaPhone(input) {
 const Delivery = () => {
   const navigate = useNavigate();
   const { cartItems, totalPrice, clearCart } = useContext(CartContext);
+  const { user } = useContext(UserContext);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -105,7 +104,7 @@ const Delivery = () => {
     try {
       // Подготовить данные заказа
       const orderData = {
-        buyer_id: CURRENT_USER_ID,
+        buyer_id: user?.user_id || 9,
         delivery_address: formData.address,
         delivery_city: formData.city,
         delivery_postal_code: formData.postal_code,

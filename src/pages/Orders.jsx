@@ -16,8 +16,8 @@ const Orders = () => {
   const [error, setError] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState('all');
 
-  // Временно используем hardcoded user_id
-  const userId = 9; // TODO: заменить на user?.id когда будет авторизация
+  // Use real user_id from context when available, fall back to 9 for demo
+  const userId = user?.user_id || 9;
 
   useEffect(() => {
     fetchOrders();
