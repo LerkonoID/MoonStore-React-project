@@ -112,9 +112,9 @@ const Delivery = () => {
         delivery_method: formData.delivery_method || "Нова Пошта",
         payment_method: formData.payment,
         items: cartItems.map(item => ({
-          product_id: item.id,
-          quantity: item.quantity
-        }))
+        product_id: Number(item.id),
+        quantity: Number(item.quantity),
+      }))
       };
 
       console.log("📤 Отправляю заказ:", orderData);

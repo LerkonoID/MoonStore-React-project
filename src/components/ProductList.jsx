@@ -33,10 +33,21 @@ const ProductList = () => {
       .then(([prodRes, catRes]) => {
         if (cancelled) return;
 
-        setItems(prodRes.data);
-        setCategories([{ id: 'all', name: 'Усі категорії' }, ...catRes.data]);
+        const products = Array.isArray(prodRes.data) ? prodRes.data : [];
+
+        // Нормализация категорий под единый формат { id, name }
+        const normalizedCategories = (Array.isArray(catRes.data) ? catRes.data : []).map((c, index) => ({
+          id: c.id ?? c.category_id ?? `cat-${index}`,
+          name: c.name ?? c.category_name ?? `Категорія ${index + 1}`,
+        }));
+
+        setItems(products);
+        setCategories([{ id: 'all', name: 'Усі категорії' }, ...normalizedCategories]);
       })
-      .catch(() => !cancelled && setError('Не вдалося загрузити товари'))
+      .catch((err) => {
+        console.error('ProductList load error:', err?.response?.data || err.message);
+        if (!cancelled) setError('Не вдалося загрузити товари');
+      })
       .finally(() => !cancelled && setLoading(false));
 
     return () => {
@@ -109,8 +120,8 @@ const ProductList = () => {
             color: '#fff',
           }}
         >
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
+          {categories.map((c, index) => (
+            <option key={`${c.id}-${index}`} value={c.id}>
               {c.name}
             </option>
           ))}
@@ -137,9 +148,9 @@ const ProductList = () => {
 
       <div className="product-grid">
         {pageItems.map((p) => (
-          <article key={p.id} className="product-card">
+          <article key={p.id ?? p.product_id} className="product-card">
             <Link
-              to={`/product/${p.id}`}
+              to={`/product/${p.id ?? p.product_id}`}
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
               <div
@@ -177,7 +188,7 @@ const ProductList = () => {
                 onClick={(e) => {
                   e.preventDefault();
                   addToCart({
-                    id: p.id,
+                    id: p.id ?? p.product_id,
                     title: p.name,
                     price: p.price,
                     image: p.image_url,

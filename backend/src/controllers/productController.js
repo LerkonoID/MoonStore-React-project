@@ -13,9 +13,9 @@ const getAllProducts = async (req, res) => {
         p.stock_quantity,
         p.rating,
         p.review_count,
-        c.name AS category_name
+        c.category_name AS category_name
       FROM products p
-      LEFT JOIN categories c ON p.category_id = c.id
+      LEFT JOIN categories c ON p.category_id = c.category_id
       WHERE p.is_active = 1
       ORDER BY p.created_at DESC
     `);
@@ -43,9 +43,9 @@ const getProductById = async (req, res) => {
         p.stock_quantity,
         p.rating,
         p.review_count,
-        c.name AS category_name
+        c.category_name AS category_name
       FROM products p
-      LEFT JOIN categories c ON p.category_id = c.id
+      LEFT JOIN categories c ON p.category_id = c.category_id
       WHERE p.product_id = ? AND p.is_active = 1
       `,
       [id]
