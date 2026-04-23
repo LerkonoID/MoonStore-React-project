@@ -7,9 +7,12 @@ import About from './pages/About';
 import Contacts from './pages/Contacts.jsx';
 import Delivery from './pages/Delivery.jsx';
 import Success from './pages/Success.jsx';
-import Orders from './pages/Orders.jsx';  // 🆕 НОВЫЙ
-import OrderDetail from './pages/OrderDetail.jsx';  // 🆕 НОВЫЙ
+import Orders from './pages/Orders.jsx';
+import OrderDetail from './pages/OrderDetail.jsx';
 import ProductDetail from './pages/ProductDetail.jsx';
+import Login from './pages/Login.jsx';
+import Register from './pages/Register.jsx';
+import Admin from './pages/Admin.jsx';
 import Loader from './components/Loader.jsx';
 import Cart from './pages/Cart';
 import Footer from './components/Footer.jsx';
@@ -58,8 +61,11 @@ function App() {
                 <Route path="/contacts" element={<Contacts />} />
                 <Route path="/delivery" element={<Delivery />} />
                 <Route path="/success" element={<Success />} />
-                <Route path="/orders" element={<Orders />} />  {/* 🆕 НОВЫЙ */}
-                <Route path="/order/:id" element={<OrderDetail />} />  {/* 🆕 НОВЫЙ */}
+                <Route path="/orders" element={<Orders />} />
+                <Route path="/order/:id" element={<OrderDetail />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/admin" element={<Admin />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>

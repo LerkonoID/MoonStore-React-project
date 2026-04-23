@@ -27,10 +27,73 @@
   color: #fff; 
 }
 
-.header__right { display: flex; 
-  justify-content: flex-end; 
+.header__right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
 }
 
 .header__cart { color: #fff; 
   text-decoration: none; 
+}
+
+.header__user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+
+.header__role {
+  color: #aaa;
+}
+
+.header__username {
+  color: #cfe;
+  font-weight: 600;
+}
+
+.header__logout {
+  padding: 4px 10px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 6px;
+  color: #bcd;
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.header__logout:hover {
+  border-color: #f87171;
+  color: #f87171;
+}
+
+.header__auth {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header__auth-link {
+  color: #bcd;
+  text-decoration: none;
+  font-size: 0.88rem;
+}
+
+.header__auth-link:hover {
+  color: #fff;
+}
+
+.header__auth-link--register {
+  padding: 4px 10px;
+  background: #646cff;
+  border-radius: 6px;
+  color: #fff;
+}
+
+.header__auth-link--register:hover {
+  background: #535bf2;
+  color: #fff;
 }
